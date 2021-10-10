@@ -1,20 +1,24 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Deep Mutual Learning Framework
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+This is a [Hackathon 2021 project](https://garagehackbox.azurewebsites.net/hackathons/2356/projects/107707)
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+We are building a generic high-performance consensus server and a Python client library for it to
+train and prune clones of a neural network in parallel.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+We use this paper as an inspiration: [Deep Mutual Learning](https://openaccess.thecvf.com/content_cvpr_2018/papers/Zhang_Deep_Mutual_Learning_CVPR_2018_paper.pdf)
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+*If you already have a model with **softmax** output and you've tried to apply **structured pruning** to it - come work with us!*
+With a few extra lines of code you may be able to train a much better and compact version of your
+neural net.
+
+Our project has three parts:
+
+1. **Consensus Server:** a remote server that receives output vectors from each training host and
+   sends back the values of a loss function. We'll implement the server in C++ or Rust, but maybe
+   we'll have a small prototype in Python first. 
+2. **Client Library:** a small library in Python that will connect to the consensus server, send NN
+   output to it and receive back the value of a loss function. It should look like a simple loss
+   function that we add to the existing NN training code.
+3. **Neural Network:** *bring your own Neural Net!* Ideally, we need an existing Python project
+   that trains and tests a neural net. Even better if it has some code for iterative structured
+   pruning. And don't forget to have your dataset with you. :)
