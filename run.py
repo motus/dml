@@ -10,6 +10,7 @@ def debug_loss(gather, i):
 
 
 dml_loss = dml.DML(debug_loss)
-data = np.ones(3, dtype=np.float32) * dml_loss.rank
+
+data = np.ones(3, dtype=np.float32) * (dml_loss.rank + 1)
 loss = dml_loss(data)
 print(dml_loss.rank, loss)
