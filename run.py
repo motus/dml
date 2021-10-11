@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-# import numpy
 import dml
+import numpy as np
 
 
 def debug_loss(gather, i):
@@ -10,7 +10,6 @@ def debug_loss(gather, i):
 
 
 dml_loss = dml.DML(debug_loss)
-
-data = list(range(dml_loss.rank * 100, dml_loss.rank * 100 + 4))
+data = np.ones(3, dtype=np.float32) * dml_loss.rank
 loss = dml_loss(data)
 print(dml_loss.rank, loss)
