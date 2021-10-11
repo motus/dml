@@ -5,6 +5,7 @@ from mpi4py import MPI
 
 
 class DML:
+    "DML wrapper for a loss function"
 
     def __init__(self, loss_func):
         self.comm = MPI.COMM_WORLD
@@ -14,12 +15,25 @@ class DML:
         self.tag = 0
 
     def __call__(self, data):
+        "Compute the consensus loss function"
         self.tag += 1
         gather = self.comm.gather(data, root=0)
         if self.rank > 0:
             return self.comm.recv(source=0, tag=self.tag)
         for i in range(1, self.size):
-            loss = self.loss(data, gather, i)
+            loss = self.loss(gather, i)
             self.comm.send(loss, dest=i, tag=self.tag)
-        return self.loss(data, gather, 0)
-        
+        return self.loss(gather, 0)
+
+
+def null_loss(gather, i):
+    """Always return zero loss.
+
+    gather: a list of NN output from all nodes.
+    i: index of the current node.
+
+    returns the value of a loss of data `i`
+    against all other values in the `gather` list.
+    """
+    print("Null loss: node %d: %s" % (i, gather))
+    return 0
