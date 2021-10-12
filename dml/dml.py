@@ -33,16 +33,14 @@ def null_loss(gather, i):
     gather: a list of NN output from all nodes.
     i: index of the current node.
 
-    returns the value of a loss of data `i`
-    against all other values in the `gather` list.
+    returns 0.
     """
-    print("Null loss: node %d: %s" % (i, gather))
     return 0
 
 
 def _kl_divergence(p, q):
     "KL Divergence of two vectors"
-    return np.sum(p * np.log(p / q))
+    return np.sum(p * np.log(p / q), axis=len(p.shape) - 1)
 
 
 def kl_divergence_loss(gather, i):
