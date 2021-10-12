@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
+"""
+Starter script to test Deep Mutual Learning loss functions.
+NOTE: It requires MPI to run! To launch, do, e.g.:
+      `mpiexec -n 4 python3 ./run.py`
+"""
 
 import dml
+import dml.loss
 import numpy as np
 
 
@@ -20,7 +26,7 @@ def _main():
 
     # Same thing, for batch KL Divergence:
 
-    dml_loss = dml.DML(dml.kl_divergence_loss)
+    dml_loss = dml.DML(dml.loss.kl_divergence)
 
     data = [
         np.array([[9./25, 12./25, 4./25], [9./25, 12./25, 4./25],
