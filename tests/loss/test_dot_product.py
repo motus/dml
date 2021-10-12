@@ -23,18 +23,7 @@ def test_dot_product_vec4():
     assert dml.loss.dot_product(gather, 3) == pytest.approx(1./3)
 
 
-def test_dot_product_impl_matrix():
-    p = np.array([[9./25, 12./25, 4./25], [9./25, 12./25, 4./25],
-                  [1./3, 1./3, 1./3], [1./3, 1./3, 1./3]])
-    q = np.array([[9./25, 12./25, 4./25], [1./3, 1./3, 1./3],
-                  [9./25, 12./25, 4./25], [1./3, 1./3, 1./3]])
-    assert dml.loss._dot_product_impl(p, q) == pytest.approx(
-        np.array([0.3856, 1./3, 1./3, 1./3]))
-    assert dml.loss._dot_product_impl(q, p) == pytest.approx(
-        np.array([0.3856, 1./3, 1./3, 1./3]))
-
-
-def test_dot_product_loss_matrix():
+def test_dot_product_matrix():
     gather = [
         np.array([[9./25, 12./25, 4./25], [9./25, 12./25, 4./25],
                  [1./3, 1./3, 1./3], [1./3, 1./3, 1./3]]),

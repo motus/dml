@@ -15,12 +15,21 @@ def null(gather, i):
     return 0
 
 
-def _kl_divergence_impl(p, q):
-    "KL Divergence of two vectors or matrices"
-    return np.sum(p * np.log(p / q), axis=len(p.shape) - 1)
+def dml_loss(loss_func):
+    """
+    A decorator that produces a DML loss function that applies
+    `loss_func` for each element `i` against all other elements
+    in `gather` and averages out the results.
+    """
+    def _impl(gather, i):
+        p = gather[i]
+        return sum(loss_func(p, q) for (j, q) in enumerate(gather)
+                   if j != i) / (len(gather) - 1)
+    return _impl
 
 
-def kl_divergence(gather, i):
+@dml_loss
+def kl_divergence(p, q):
     """
     KL Divergence loss. An average of KL divergencies
     of vector `i` and all other vectors in `gather`.
@@ -31,18 +40,11 @@ def kl_divergence(gather, i):
     returns the average value of a KL Divergence of data `i`
     against all other values in the `gather` list.
     """
-    p = gather[i]
-    return sum(_kl_divergence_impl(p, q) for (j, q) in enumerate(gather)
-               if j != i) / (len(gather) - 1)
+    return np.sum(p * np.log(p / q), axis=len(p.shape) - 1)
 
 
-def _dot_product_impl(p, q):
-    "Row-wise dot product of two vectors or matrices"
-    res = p.dot(q.T)
-    return res.diagonal() if isinstance(res, np.ndarray) else res
-
-
-def dot_product(gather, i):
+@dml_loss
+def dot_product(p, q):
     """
     Dot Product loss. An average of row-wise dot products
     of `i` and all other vectors or matrices in `gather`.
@@ -53,6 +55,5 @@ def dot_product(gather, i):
     returns the average value of row-wise dot products
     of data `i` against all other values in the `gather` list.
     """
-    p = gather[i]
-    return sum(_dot_product_impl(p, q) for (j, q) in enumerate(gather)
-               if j != i) / (len(gather) - 1)
+    res = p.dot(q.T)
+    return res.diagonal() if isinstance(res, np.ndarray) else res
