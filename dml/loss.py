@@ -17,9 +17,9 @@ def null(gather, i):
 
 def dml_loss(loss_func):
     """
-    A decorator that produces a DML loss function that applies
-    `loss_func` for each element `i` against all other elements
-    in `gather` and averages out the results.
+    A decorator that produces a DML loss function applying `loss_func`
+    for each element `i` against all other elements in `gather` and
+    averaging out the results.
     """
     def _impl(gather, i):
         p = gather[i]
@@ -57,3 +57,21 @@ def dot_product(p, q):
     """
     res = p.dot(q.T)
     return res.diagonal() if isinstance(res, np.ndarray) else res
+
+
+@dml_loss
+def cosine_similarity(p, q):
+    """
+    Cosine Similatity loss. An average of row-wise cosine similarity
+    values of `i` and all other vectors or matrices in `gather`.
+
+    gather: a list of NN output from all nodes.
+    i: index of the current node.
+
+    returns the average value of row-wise cosine similarities
+    of data `i` against all other values in the `gather` list.
+    """
+    axis = len(p.shape) - 1
+    norm = np.linalg.norm(p, axis=axis) * np.linalg.norm(q, axis=axis)
+    res = p.dot(q.T)
+    return (res.diagonal() if isinstance(res, np.ndarray) else res) / norm
