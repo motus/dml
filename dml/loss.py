@@ -55,8 +55,7 @@ def dot_product(p, q):
     returns the average value of row-wise dot products
     of data `i` against all other values in the `gather` list.
     """
-    res = p.dot(q.T)
-    return res.diagonal() if isinstance(res, np.ndarray) else res
+    return (p * q).sum(axis=len(p.shape) - 1)
 
 
 @dml_loss
@@ -72,6 +71,5 @@ def cosine_similarity(p, q):
     of data `i` against all other values in the `gather` list.
     """
     axis = len(p.shape) - 1
-    norm = np.linalg.norm(p, axis=axis) * np.linalg.norm(q, axis=axis)
-    res = p.dot(q.T)
-    return (res.diagonal() if isinstance(res, np.ndarray) else res) / norm
+    return (p * q).sum(axis=axis) / (
+        np.linalg.norm(p, axis=axis) * np.linalg.norm(q, axis=axis))
